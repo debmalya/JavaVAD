@@ -16,7 +16,11 @@ import javax.sound.sampled.TargetDataLine;
  *
  */
 public class HumanVoiceRecorder {
-	public static final byte[] SILENCE = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0 };
+	/**
+	 * 
+	 */
+	private static final int ARRAY_SIZE = 16;
+	public static byte[] SILENCE = new byte[ARRAY_SIZE];
 
 	public static void main(final String args[]) {
 		AudioFormat format = getAudioFormat();
@@ -32,10 +36,11 @@ public class HumanVoiceRecorder {
 			line = (TargetDataLine) AudioSystem.getLine(info);
 			line.open(format);
 			line.start();
+			Arrays.fill(SILENCE, (byte)0);
 			while (true) {
 				AudioInputStream ais = new AudioInputStream(line);
-				byte[] b = new byte[8];
-				ais.read(b, 0, 8);
+				byte[] b = new byte[ARRAY_SIZE];
+				ais.read(b, 0, ARRAY_SIZE);
 				if (Arrays.equals(SILENCE, b)) {
 					System.out.println("Slience :" + Arrays.toString(b));
 				} else {
