@@ -19,7 +19,7 @@ public class HumanVoiceRecorder {
 	/**
 	 * 
 	 */
-	private static final int ARRAY_SIZE = 16;
+	private static final int ARRAY_SIZE = 256;
 	public static byte[] SILENCE = new byte[ARRAY_SIZE];
 
 	public static void main(final String args[]) {
