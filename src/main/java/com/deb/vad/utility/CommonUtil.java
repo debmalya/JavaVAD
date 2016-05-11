@@ -3,6 +3,11 @@
  */
 package com.deb.vad.utility;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
+import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
 
 /**
@@ -10,6 +15,21 @@ import javax.sound.sampled.AudioFormat;
  *
  */
 public class CommonUtil {
+	
+	// format of audio file
+    public final static AudioFileFormat.Type waveType = AudioFileFormat.Type.WAVE;
+    
+    /**
+     * 
+     * @param format
+     * @return
+     */
+    public static String getDate(String format) {
+		Date d = Calendar.getInstance().getTime(); // Current time
+		SimpleDateFormat sdf = new SimpleDateFormat(format); // Set your date
+		// format
+		return sdf.format(d);
+	}
 	
 	/**
 	 * Defines an audio format. Encoding technique, usually pulse code
