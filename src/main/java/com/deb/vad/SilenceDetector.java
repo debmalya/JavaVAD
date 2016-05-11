@@ -1,7 +1,6 @@
 package com.deb.vad;
 
 import java.util.Arrays;
-import java.util.Date;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -12,11 +11,13 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.TargetDataLine;
 
+import com.deb.vad.utility.*;
+
 /**
  * @author debmalyajash
  *
  */
-public class HumanVoiceRecorder {
+public class SilenceDetector {
 	/**
 	 * 
 	 */
@@ -24,7 +25,7 @@ public class HumanVoiceRecorder {
 	public static byte[] SILENCE = new byte[ARRAY_SIZE];
 
 	public static void main(final String args[]) {
-		AudioFormat format = getAudioFormat();
+		AudioFormat format = CommonUtil.getAudioFormat();
 
 		// A line is an element of the digital audio "pipeline" that is, a path
 		// for moving audio into or out of the system. Usually the line is a
@@ -61,9 +62,9 @@ public class HumanVoiceRecorder {
 				byte[] b = new byte[ARRAY_SIZE];
 				ais.read(b, 0, ARRAY_SIZE);
 				if (Arrays.equals(SILENCE, b)) {
-//					System.out.println("Slience :" + Arrays.toString(b));
+					System.out.println("Slience :" + Arrays.toString(b));
 				} else {
-					System.out.println(System.currentTimeMillis() + Arrays.toString(b));
+					System.out.println("Sound :" + Arrays.toString(b));
 				}
 				
 				// The AudioSystem class provides methods for reading and
@@ -82,25 +83,5 @@ public class HumanVoiceRecorder {
 
 	}
 
-	/**
-	 * Defines an audio format. Encoding technique, usually pulse code
-	 * modulation (PCM) Number of channels (1 for mono, 2 for stereo, etc.)
-	 * Sample rate (number of samples per second, per channel) Number of bits
-	 * per sample (per channel) Frame rate Frame size in bytes Byte order
-	 * (big-endian or little-endian).
-	 * 
-	 * PCM is one kind of encoding of the sound waveform. The Java Sound API
-	 * includes two PCM encodings that use linear quantization of amplitude, and
-	 * signed or unsigned integer values.
-	 */
-	private static AudioFormat getAudioFormat() {
-		float sampleRate = 16000;  // line buffer size
-		int sampleSizeInBits = 8;
-		int channels = 1;
-		boolean signed = true;
-		boolean bigEndian = true;
-		AudioFormat format = new AudioFormat(sampleRate, sampleSizeInBits,
-				channels, signed, bigEndian);
-		return format;
-	}
+	
 }
