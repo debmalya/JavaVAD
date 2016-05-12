@@ -55,7 +55,8 @@ public class DebRecorder {
 		if (wavFile == null) {
 
 			wavFile = new File(CommonUtil.getDate("ddMMyyyy_kkmmss") + ".wav");
-//			wavFile = new FileWriter(new File(CommonUtil.getDate("ddMMyyyy_kkmmss") + ".wav"),true);
+			// wavFile = new FileWriter(new
+			// File(CommonUtil.getDate("ddMMyyyy_kkmmss") + ".wav"),true);
 		}
 
 		DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
@@ -71,17 +72,16 @@ public class DebRecorder {
 			line.start();
 			int size = line.getBufferSize() / 5;
 
-			ByteArrayOutputStream out = new ByteArrayOutputStream(size);
 			int numBytesRead;
-			
 
 			// Begin audio capture.
 			line.start();
 
-//			AudioInputStream ais = new AudioInputStream(line);
+			// AudioInputStream ais = new AudioInputStream(line);
 
 			// Here, stopped is a global boolean set by another thread.
 			while (!stopped) {
+				ByteArrayOutputStream out = new ByteArrayOutputStream(size);
 				byte[] data = new byte[size];
 				// Read the next chunk of data from the TargetDataLine.
 				numBytesRead = line.read(data, 0, data.length);
@@ -94,13 +94,12 @@ public class DebRecorder {
 						data.length / format.getFrameSize());
 				int nWrittenBytes = AudioSystem.write(outputAIS,
 						CommonUtil.waveType, wavFile);
-				
-				
-				
+
 				out.flush();
 				bais = null;
 				outputAIS = null;
 				data = null;
+				out = null;
 			}
 		} catch (Throwable e) {
 			// TODO Auto-generated catch block
@@ -110,6 +109,9 @@ public class DebRecorder {
 				line.flush();
 				line.close();
 			}
+
+			wavFile = null;
+			System.out.println("Bye Bye");
 		}
 	}
 }
