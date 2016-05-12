@@ -3,8 +3,10 @@
  */
 package com.deb.vad;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileWriter;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -19,14 +21,12 @@ import com.deb.vad.utility.CommonUtil;
  *
  */
 public class DebRecorder {
-	
+
 	/**
 	 * File where sound will be recorded.
 	 */
 	private static File wavFile = null;
-	
 
-	
 	/**
 	 * When to stop recording.
 	 */
@@ -51,10 +51,11 @@ public class DebRecorder {
 		} else {
 			format = CommonUtil.getAudioFormatStereo();
 		}
-		
+
 		if (wavFile == null) {
-			
-			wavFile = new File(CommonUtil.getDate("ddMMyyyy_kkmmss")+".wav");
+
+			wavFile = new File(CommonUtil.getDate("ddMMyyyy_kkmmss") + ".wav");
+//			wavFile = new FileWriter(new File(CommonUtil.getDate("ddMMyyyy_kkmmss") + ".wav"),true);
 		}
 
 		DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
@@ -69,27 +70,37 @@ public class DebRecorder {
 			line.open(format);
 			line.start();
 			int size = line.getBufferSize() / 5;
-			
+
 			ByteArrayOutputStream out = new ByteArrayOutputStream(size);
 			int numBytesRead;
-			byte[] data = new byte[size];
 			
 
 			// Begin audio capture.
 			line.start();
-			
-			AudioInputStream ais = new AudioInputStream(line);
+
+//			AudioInputStream ais = new AudioInputStream(line);
 
 			// Here, stopped is a global boolean set by another thread.
 			while (!stopped) {
+				byte[] data = new byte[size];
 				// Read the next chunk of data from the TargetDataLine.
 				numBytesRead = line.read(data, 0, data.length);
 				// Save this chunk of data.
 				out.write(data, 0, numBytesRead);
-//				AudioSystem.write(ais, CommonUtil.waveType, wavFile);
-				AudioSystem.write(ais, CommonUtil.waveType, out);
+				// AudioSystem.write(ais, CommonUtil.waveType, wavFile);
+
+				ByteArrayInputStream bais = new ByteArrayInputStream(data);
+				AudioInputStream outputAIS = new AudioInputStream(bais, format,
+						data.length / format.getFrameSize());
+				int nWrittenBytes = AudioSystem.write(outputAIS,
+						CommonUtil.waveType, wavFile);
+				
+				
+				
 				out.flush();
-				System.out.println(".");
+				bais = null;
+				outputAIS = null;
+				data = null;
 			}
 		} catch (Throwable e) {
 			// TODO Auto-generated catch block
