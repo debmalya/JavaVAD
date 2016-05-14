@@ -52,12 +52,8 @@ public class DebRecorder {
 			format = CommonUtil.getAudioFormatStereo();
 		}
 
-		if (wavFile == null) {
-
-			wavFile = new File(CommonUtil.getDate("ddMMyyyy_kkmmss") + ".wav");
-			// wavFile = new FileWriter(new
-			// File(CommonUtil.getDate("ddMMyyyy_kkmmss") + ".wav"),true);
-		}
+		final String fileName = CommonUtil.getDate("ddMMyyyy_kkmmss") + ".wav";
+		
 
 		DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
 		if (!AudioSystem.isLineSupported(info)) {
@@ -81,6 +77,7 @@ public class DebRecorder {
 
 			// Here, stopped is a global boolean set by another thread.
 			while (!stopped) {
+				wavFile = new File(fileName);
 				ByteArrayOutputStream out = new ByteArrayOutputStream(size);
 				byte[] data = new byte[size];
 				// Read the next chunk of data from the TargetDataLine.
@@ -100,6 +97,7 @@ public class DebRecorder {
 				outputAIS = null;
 				data = null;
 				out = null;
+				wavFile = null;
 			}
 		} catch (Throwable e) {
 			// TODO Auto-generated catch block
