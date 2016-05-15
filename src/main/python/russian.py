@@ -6,9 +6,11 @@ def russian(a,b):
             z = z + y
         y = y << 1
         x = x >> 1
+        if x == 7 and z == 84:
+            print(y)
     return z
 
 
-print(russian(14,11))
+print(russian(63,12))
 
               
