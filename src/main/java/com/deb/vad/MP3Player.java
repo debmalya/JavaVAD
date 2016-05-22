@@ -24,6 +24,9 @@ public class MP3Player {
 	    AudioInputStream in= AudioSystem.getAudioInputStream(file);
 	    AudioInputStream din = null;
 	    AudioFormat baseFormat = in.getFormat();
+	    System.out.println("Sample Rate :" + baseFormat.getSampleRate());
+	    System.out.println("baseFormat.getChannels() :" + baseFormat.getChannels());
+	    System.out.println("baseFormat.getChannels() :" + baseFormat.getChannels());
 	    AudioFormat decodedFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 
 	                                                                                  baseFormat.getSampleRate(),
 	                                                                                  16,

@@ -52,6 +52,7 @@ public class DebRecorder {
 		}
 
 		final String fileName = CommonUtil.getDate("ddMMyyyy_kkmmss") + ".wav";
+		wavFile = new File(fileName);
 		
 
 		DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
@@ -76,7 +77,7 @@ public class DebRecorder {
 
 			// Here, stopped is a global boolean set by another thread.
 			while (!stopped) {
-				wavFile = new File(fileName);
+//				wavFile = new File(fileName);
 				ByteArrayOutputStream out = new ByteArrayOutputStream(size);
 				byte[] data = new byte[size];
 				// Read the next chunk of data from the TargetDataLine.
