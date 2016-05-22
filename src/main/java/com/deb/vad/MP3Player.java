@@ -17,7 +17,7 @@ public class MP3Player {
 
 	}
 	
-	public void testPlay(String filename)
+	public void testPlay(String filename) throws Exception
 	{
 	  try {
 	    File file = new File(filename);
@@ -38,6 +38,7 @@ public class MP3Player {
 	  } catch (Exception e)
 	    {
 	        //Handle exception.
+		  throw new Exception(e);
 	    }
 	} 
 
