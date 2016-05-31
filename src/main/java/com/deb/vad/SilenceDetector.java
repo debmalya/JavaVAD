@@ -51,6 +51,7 @@ public class SilenceDetector {
             line.open(format);
             line.start();
             Arrays.fill(SILENCE, (byte)0);
+            AudioInputStream ais = new AudioInputStream(line);
             while (true) {
                 // An AudioInputStream is a subclass of the InputStream class,
                 // which encapsulates a series of bytes that can be read
@@ -58,11 +59,11 @@ public class SilenceDetector {
                 // adds knowledge of the bytes' audio data format (represented
                 // by an AudioFormat object).
 
-                AudioInputStream ais = new AudioInputStream(line);
+                
                 byte[] b = new byte[ARRAY_SIZE];
                 ais.read(b, 0, ARRAY_SIZE);
                 if (Arrays.equals(SILENCE, b)) {
-                    System.out.println("Slience :" + Arrays.toString(b));
+//                    System.out.println("Slience :" + Arrays.toString(b));
                 } else {
                     System.out.println("Sound :" + Arrays.toString(b));
                 }
@@ -70,8 +71,6 @@ public class SilenceDetector {
                 // The AudioSystem class provides methods for reading and
                 // writing sounds in different file formats, and for converting
                 // between different data formats.
-                ais.close();
-                ais = null;
                 b = null;
             }
         } catch (Throwable e) {
