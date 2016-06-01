@@ -1,6 +1,7 @@
 package com.deb.vad;
 
 import java.util.Arrays;
+import java.util.Date;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -11,7 +12,7 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.TargetDataLine;
 
-import com.deb.vad.utility.*;
+import com.deb.vad.utility.CommonUtil;
 
 /**
  * @author debmalyajash
@@ -50,8 +51,9 @@ public class SilenceDetector {
             line = (TargetDataLine)AudioSystem.getLine(info);
             line.open(format);
             line.start();
-            
+
             AudioInputStream ais = new AudioInputStream(line);
+            StringBuilder sb = new StringBuilder();
             while (true) {
                 // An AudioInputStream is a subclass of the InputStream class,
                 // which encapsulates a series of bytes that can be read
@@ -64,17 +66,26 @@ public class SilenceDetector {
                 SILENCE = new byte[size];
                 Arrays.fill(SILENCE, (byte)0);
                 ais.read(b, 0, size);
-                
+
                 if (Arrays.equals(SILENCE, b)) {
-//                    System.out.println(size+ " slience :" + Arrays.toString(b));
+                    // System.out.println(size+ " slience :" +
+                    // Arrays.toString(b));
                 } else {
-                    System.out.println(size+ " sound :" + Arrays.toString(b));
+                    
+                    sb.append(new Date());
+                    sb.append(" : ");
+                    for (byte each : b) {
+                        sb.append(each);
+                    }
+                    System.out.println(sb.toString());
+                    sb.delete(0, sb.length());
+                    b = null;
                 }
 
                 // The AudioSystem class provides methods for reading and
                 // writing sounds in different file formats, and for converting
                 // between different data formats.
-                
+
                 b = null;
             }
         } catch (Throwable e) {
