@@ -78,8 +78,7 @@ public class SilenceDetector {
                         sb.append(each);
                     }
                     System.out.println(sb.toString());
-                    sb.delete(0, sb.length());
-                    b = null;
+                    sb.delete(0, sb.length());                   
                 }
 
                 // The AudioSystem class provides methods for reading and
