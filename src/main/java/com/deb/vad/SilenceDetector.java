@@ -53,7 +53,8 @@ public class SilenceDetector {
             line.start();
 
             AudioInputStream ais = new AudioInputStream(line);
-            StringBuilder sb = new StringBuilder();
+//            StringBuilder sb = new StringBuilder();
+            int total = 0;
             while (true) {
                 // An AudioInputStream is a subclass of the InputStream class,
                 // which encapsulates a series of bytes that can be read
@@ -72,13 +73,13 @@ public class SilenceDetector {
                     // Arrays.toString(b));
                 } else {
                     
-                    sb.append(new Date());
-                    sb.append(" : ");
+//                    sb.append(new Date());
+//                    sb.append(" : ");
                     for (byte each : b) {
-                        sb.append(each);
+                        total += each;
                     }
-                    System.out.println(sb.toString());
-                    sb.delete(0, sb.length());                   
+                    System.out.println(new Date() + " "+total);
+//                    sb.delete(0, sb.length());                   
                 }
 
                 // The AudioSystem class provides methods for reading and
