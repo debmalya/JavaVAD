@@ -77,6 +77,7 @@ public class SilenceDetector {
 //                    sb.append(" : ");
                     byte max = Byte.MIN_VALUE;
                     byte min = Byte.MAX_VALUE;
+                    total = 0;
                     for (byte each : b) {
                         if (each < min) {
                             min = each;
