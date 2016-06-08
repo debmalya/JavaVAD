@@ -75,10 +75,17 @@ public class SilenceDetector {
                     
 //                    sb.append(new Date());
 //                    sb.append(" : ");
+                    byte max = Byte.MIN_VALUE;
+                    byte min = Byte.MAX_VALUE;
                     for (byte each : b) {
+                        if (each < min) {
+                            min = each;
+                        } else if (each > max){
+                            max = each;
+                        }
                         total += each;
                     }
-                    System.out.println(new Date() + " "+total);
+                    System.out.println(new Date() + " "+total+ " Range " + min + " ~ " + max);
 //                    sb.delete(0, sb.length());                   
                 }
 
