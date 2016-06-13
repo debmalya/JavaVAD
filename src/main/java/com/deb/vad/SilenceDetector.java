@@ -2,6 +2,8 @@ package com.deb.vad;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -54,7 +56,8 @@ public class SilenceDetector {
 
             AudioInputStream ais = new AudioInputStream(line);
 //            StringBuilder sb = new StringBuilder();
-            int total = 0;
+ 
+            Map<Long,byte[]> timeBasedAudioInputMap = new HashMap<>();
             while (true) {
                 // An AudioInputStream is a subclass of the InputStream class,
                 // which encapsulates a series of bytes that can be read
@@ -68,33 +71,18 @@ public class SilenceDetector {
                 Arrays.fill(SILENCE, (byte)0);
                 ais.read(b, 0, size);
 
-                if (Arrays.equals(SILENCE, b)) {
-                    // System.out.println(size+ " slience :" +
-                    // Arrays.toString(b));
+                if (Arrays.equals(SILENCE, b)) {                  
                 } else {
-                    
-//                    sb.append(new Date());
-//                    sb.append(" : ");
-                    byte max = Byte.MIN_VALUE;
-                    byte min = Byte.MAX_VALUE;
-                    total = 0;
-                    for (byte each : b) {
-                        if (each < min) {
-                            min = each;
-                        } else if (each > max){
-                            max = each;
-                        }
-                        total += each;
-                    }
-                    System.out.println(new Date() + " "+total+ " Range " + min + " ~ " + max);
-//                    sb.delete(0, sb.length());                   
+                	timeBasedAudioInputMap.put(System.currentTimeMillis(),b);
+                  
                 }
 
                 // The AudioSystem class provides methods for reading and
                 // writing sounds in different file formats, and for converting
                 // between different data formats.
 
-                b = null;
+//                b = null;
+                System.out.println("Alive...");
             }
         } catch (Throwable e) {
             // TODO Auto-generated catch block
@@ -107,5 +95,21 @@ public class SilenceDetector {
         }
 
     }
+
+	private static void getInputRange(byte[] b) {
+		int total;
+		byte max = Byte.MIN_VALUE;
+		byte min = Byte.MAX_VALUE;
+		total = 0;
+		for (byte each : b) {
+		    if (each < min) {
+		        min = each;
+		    } else if (each > max){
+		        max = each;
+		    }
+		    total += each;
+		}
+		System.out.println(new Date() + " "+total+ " Range " + min + " ~ " + max);
+	}
 
 }
