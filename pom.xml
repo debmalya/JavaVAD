@@ -61,9 +61,17 @@
 		<dependency>
 			<groupId>org.mapdb</groupId>
 			<artifactId>mapdb</artifactId>
-			<version>3.0.0-RC1</version>
 		</dependency>
 	</dependencies>
 
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.mapdb</groupId>
+				<artifactId>mapdb</artifactId>
+				<version>3.0.0-RC1</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 </project>
 
