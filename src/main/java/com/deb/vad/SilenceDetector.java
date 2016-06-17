@@ -14,18 +14,14 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.TargetDataLine;
 
-import org.mapdb.DB;
-import org.mapdb.DBMaker;
-import org.mapdb.HTreeMap;
-import org.mapdb.Serializer;
-
 import com.deb.vad.utility.CommonUtil;
 
 /**
  * @author debmalyajash
  *
  */
-public class SilenceDetector {
+public class SilenceDetector implements SoundCache{
+	private static Map<Long,byte[]> timeBasedAudioInputMap = new HashMap<>();
 	/**
 	 * 
 	 */
@@ -33,7 +29,9 @@ public class SilenceDetector {
 	public static byte[] SILENCE = new byte[ARRAY_SIZE];
 
 	public static void main(final String args[]) {
+		Thread.currentThread().setName("DebSilenceDetector");
 		AudioFormat format = CommonUtil.getAudioFormat();
+		SilenceDetector me = new SilenceDetector();
 
 		// A line is an element of the digital audio "pipeline" that is, a path
 		// for moving audio into or out of the system. Usually the line is a
@@ -47,6 +45,10 @@ public class SilenceDetector {
 		// These data paths are analogous to the tracks of the multitrack
 		// recorder connected to the physical mixing console.
 		DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
+		
+		Thread voiceRetrieverThread = new Thread(new VoiceRetriever(me));
+		voiceRetrieverThread.setName("DebVoiceRetriever");
+		voiceRetrieverThread.start();
 
 		// checks if system supports the data line
 		if (!AudioSystem.isLineSupported(info)) {
@@ -62,7 +64,7 @@ public class SilenceDetector {
 			AudioInputStream ais = new AudioInputStream(line);
 			// StringBuilder sb = new StringBuilder();
 			
-			Map<Long,byte[]> timeBasedAudioInputMap = new HashMap<>();
+			
 
 			
 			while (true) {
@@ -81,7 +83,7 @@ public class SilenceDetector {
 				if (Arrays.equals(SILENCE, b)) {
 				} else {
 					timeBasedAudioInputMap.put(System.currentTimeMillis(), b);
-
+					System.out.println("R");
 				}
 
 				// The AudioSystem class provides methods for reading and
@@ -89,10 +91,9 @@ public class SilenceDetector {
 				// between different data formats.
 
 				// b = null;
-				System.out.println("Alive...");
+				
 			}
 		} catch (Throwable e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			if (line != null) {
@@ -117,6 +118,11 @@ public class SilenceDetector {
 			total += each;
 		}
 		System.out.println(new Date() + " " + total + " Range " + min + " ~ " + max);
+	}
+
+	@Override
+	public Map<Long, byte[]> getAudioMap() {
+		return timeBasedAudioInputMap;
 	}
 
 }
