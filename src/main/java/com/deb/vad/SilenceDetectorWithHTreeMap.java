@@ -94,7 +94,7 @@ public class SilenceDetectorWithHTreeMap implements SoundCache{
 				if (Arrays.equals(SILENCE, b)) {
 				} else {
 					timeBasedAudioInputMap.put(System.currentTimeMillis(), b);
-					System.out.println("W");
+					System.out.println("W" + timeBasedAudioInputMap.size());
 				}
 				
 				

@@ -83,7 +83,7 @@ public class SilenceDetector implements SoundCache{
 				if (Arrays.equals(SILENCE, b)) {
 				} else {
 					timeBasedAudioInputMap.put(System.currentTimeMillis(), b);
-					System.out.println("R");
+					System.out.println("W");
 				}
 
 				// The AudioSystem class provides methods for reading and
