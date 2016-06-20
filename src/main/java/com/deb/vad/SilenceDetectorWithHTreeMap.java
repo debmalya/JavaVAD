@@ -13,6 +13,7 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.TargetDataLine;
 
+import org.apache.log4j.Logger;
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
 import org.mapdb.HTreeMap;
@@ -24,12 +25,14 @@ import com.deb.vad.utility.CommonUtil;
  * @author debmalyajash
  *
  */
-public class SilenceDetectorWithHTreeMap implements SoundCache{
+public class SilenceDetectorWithHTreeMap implements SoundCache {
 	/**
 	 * 
 	 */
 	private static final int ARRAY_SIZE = 8;
 	public static byte[] SILENCE = new byte[ARRAY_SIZE];
+	
+	private static Logger LOGGER = null;
 
 	/**
 	 * In Memory DB. DBMaker.memoryDB().make();
@@ -42,6 +45,16 @@ public class SilenceDetectorWithHTreeMap implements SoundCache{
 	 */
 	private static HTreeMap<Long, byte[]> timeBasedAudioInputMap = db
 			.hashMap("long_byte_array_map", Serializer.LONG, Serializer.BYTE_ARRAY).create();
+
+	/**
+	 * If size exceeds it will be stored here.
+	 */
+	private static DB expirationDB = DBMaker.fileDB("InDisk.db").make();
+
+	private static HTreeMap onDisk = expirationDB.hashMap("_onDisk").createOrOpen();
+
+	private static HTreeMap<Long, byte[]> sizeBasedAudioInputMap = (HTreeMap<Long, byte[]>)DBMaker.memoryShardedHashMap(16).expireAfterUpdate()
+			.expireStoreSize(1 * 1024 * 1024 * 1024).expireOverflow(onDisk).createOrOpen();
 
 	public static void main(final String args[]) {
 		Thread.currentThread().setName("DebMain");
@@ -73,7 +86,7 @@ public class SilenceDetectorWithHTreeMap implements SoundCache{
 			line.start();
 
 			AudioInputStream ais = new AudioInputStream(line);
-			
+
 			Thread voiceRetrieverThread = new Thread(new VoiceRetriever(me));
 			voiceRetrieverThread.setName("DebVoiceRetriever");
 			voiceRetrieverThread.start();
@@ -93,33 +106,36 @@ public class SilenceDetectorWithHTreeMap implements SoundCache{
 
 				if (Arrays.equals(SILENCE, b)) {
 				} else {
-					timeBasedAudioInputMap.put(System.currentTimeMillis(), b);
-					System.out.println("W" + timeBasedAudioInputMap.size());
+
 				}
-				
-				
+				// putting everything into map (Silence and Sound)
+				//timeBasedAudioInputMap.put(System.currentTimeMillis(), b);
+				sizeBasedAudioInputMap.put(System.currentTimeMillis(), b);
 
 				// The AudioSystem class provides methods for reading and
 				// writing sounds in different file formats, and for converting
 				// between different data formats.
 
 				// b = null;
-				
 
 			}
 		} catch (Throwable e) {
-			e.printStackTrace();
+			LOGGER.error(e.getMessage(),e);
 		} finally {
 			if (line != null) {
 				line.flush();
 				line.close();
+			}
+			if (expirationDB != null) {
+				expirationDB.close();
 			}
 		}
 
 	}
 
 	public static HTreeMap<Long, byte[]> getTimeBasedAudioInputMap() {
-		return timeBasedAudioInputMap;
+//		return timeBasedAudioInputMap;
+		return sizeBasedAudioInputMap;
 	}
 
 	private static void getInputRange(byte[] b) {
