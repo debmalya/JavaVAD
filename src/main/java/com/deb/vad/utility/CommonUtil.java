@@ -12,8 +12,6 @@ import java.util.Map;
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
 
-import javazoom.spi.mpeg.sampled.file.MpegAudioFormat;
-import javazoom.spi.mpeg.sampled.file.MpegEncoding;
 import javazoom.spi.mpeg.sampled.file.MpegFileFormatType;
 
 /**
