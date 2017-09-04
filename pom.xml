@@ -62,6 +62,16 @@
 			<groupId>org.mapdb</groupId>
 			<artifactId>mapdb</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.jsr107.ri</groupId>
+			<artifactId>cache-ri-impl</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.ehcache</groupId>
+			<artifactId>ehcache</artifactId>
+			<version>3.0.2</version>
+		</dependency>
 	</dependencies>
 
 	<dependencyManagement>
