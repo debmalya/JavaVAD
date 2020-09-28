@@ -15,6 +15,8 @@ import javax.sound.sampled.DataLine;
 import javax.sound.sampled.TargetDataLine;
 
 import com.deb.vad.utility.CommonUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author debmalyajash
@@ -27,6 +29,8 @@ public class SilenceDetector implements SoundCache{
 	 */
 	private static final int ARRAY_SIZE = 8;
 	public static byte[] SILENCE = new byte[ARRAY_SIZE];
+
+	private static final Logger logger = LoggerFactory.getLogger(SilenceDetector.class);
 
 	public static void main(final String args[]) {
 		Thread.currentThread().setName("DebSilenceDetector");
@@ -80,16 +84,19 @@ public class SilenceDetector implements SoundCache{
 				Arrays.fill(SILENCE, (byte) 0);
 				ais.read(b, 0, size);
 
-//				System.out.println( System.currentTimeMillis() );
+
 				if (Arrays.equals(SILENCE, b)) {
-//					System.out.println("AS");
+                     if (logger.isInfoEnabled()){
+                     	logger.info("~~~ SILENCE ~~~~");
+					 }else {
+						 System.out.println("~~~ SILENCE ~~~~");
+					 }
 				} else {
-//					timeBasedAudioInputMap.put(System.currentTimeMillis(), b);
-//					System.out.println("W");
-					System.out.println( System.currentTimeMillis() );
-					System.out.println( b.length );
-//					System.out.println( "NS" );
-					System.out.println( Arrays.toString( b ) );
+					if (logger.isInfoEnabled()){
+						logger.info(String.format("~~~ NOISE ~~~~ %s",Arrays.toString( b )));
+					}else{
+						System.out.println(String.format("~~~ NOISE ~~~~ %s",Arrays.toString( b )));
+					}
 				}
 
 				// The AudioSystem class provides methods for reading and
@@ -100,7 +107,9 @@ public class SilenceDetector implements SoundCache{
 				
 			}
 		} catch (Throwable e) {
-			e.printStackTrace();
+			if (logger.isInfoEnabled()){
+				logger.error(e.getMessage(),e);
+			}
 		} finally {
 			if (line != null) {
 				line.flush();

@@ -1,25 +1,17 @@
 package com.deb.vad;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Map;
-
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-/**
- * 
- */
-import javax.sound.sampled.DataLine;
-import javax.sound.sampled.TargetDataLine;
-
-import org.apache.log4j.Logger;
+import com.deb.vad.utility.CommonUtil;
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
 import org.mapdb.HTreeMap;
 import org.mapdb.Serializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.deb.vad.utility.CommonUtil;
+import javax.sound.sampled.*;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.Map;
 
 /**
  * @author debmalyajash
@@ -32,7 +24,7 @@ public class SilenceDetectorWithHTreeMap implements SoundCache {
 	private static final int ARRAY_SIZE = 8;
 	public static byte[] SILENCE = new byte[ARRAY_SIZE];
 
-	private static Logger LOGGER = Logger.getLogger(SilenceDetectorWithHTreeMap.class);
+	private static Logger LOGGER = LoggerFactory.getLogger(SilenceDetectorWithHTreeMap.class);
 
 	/**
 	 * In Memory DB. DBMaker.memoryDB().make();
